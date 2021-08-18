@@ -1,0 +1,63 @@
+﻿
+@model BIO_Prueba_Tecnica.Models.Login;
+@{
+    ViewData [ "Título" ] =  "Crear" ;
+}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="~/css/all.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>Login</title>
+</head>
+<body>
+    <div class="login-form">
+        <form asp-action="Login" method="post">
+            <div class="form-name">
+                <span>Bienvenido</span>
+            </div>
+            <div style="text-align: center">
+                <span class="text-danger"> @ViewBag.login</span>
+            </div>
+          
+            <div class="form-group">
+                <input type="text" class="form-control item" id="username" placeholder="Usuario" asp-for="usuario_Nombre">
+                <span asp-validation-for="usuario_Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control item" id="password" placeholder="Contraseña" asp-for="usuario_Clave">
+                <span asp-validation-for="usuario_Clave" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-block login-account">Login</button>
+            </div>
+            <div class="form-group">
+                <a  href="/Usuarios/RecuperarCuenta">¿Perdiste tu contraseña?</a>
+            </div>
+            <div class="form-group">
+                <a href="/Usuarios/CrearUsuario">¿No tienes Cuenta? Regístrate</a>
+            </div>
+        </form>
+        <div class="social-media">
+            <h5>Login Con</h5>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-google"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/js/all.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
