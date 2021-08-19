@@ -1,0 +1,44 @@
+﻿@model IEnumerable<BIO_Prueba_Tecnica.Models.EstadoCuenta>;
+
+
+
+    <!doctype html>
+    <html>
+    <head>
+        <title>Estado de Cuenta</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    </head>
+    <body>
+
+        <div class="container">
+            <div> <h3 style="text-align:center"> Estado de Cuenta</h3></div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Numero Id.</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th> Acción </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var datos in Model)
+                        {
+                    <tr>
+                        <td>@datos.EstadoCuent_Id</td>
+                        <td>@datos.EstadoCuent_Nombre</td>
+                        <td>@datos.EstadoCuent_Apellido</td>
+                       
+                        <td>@Html.ActionLink("Detalle", "EstadoCuentaDetalle", new { id = datos.EstadoCuent_Id}); </td>
+                    </tr>
+                        }
+                    
+                   
+                </tbody>
+            </table>
+        </div>
+
+    </body>
+</html>

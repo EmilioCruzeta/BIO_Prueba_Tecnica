@@ -1,0 +1,69 @@
+﻿
+@model IEnumerable<BIO_Prueba_Tecnica.Models.EstadoCuenta>;
+<!doctype html>
+<html>
+<head>
+    <title>Estado de Cuenta</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container">
+        <div class="container"> <h3 style="text-align:center"> Estado de Cuenta</h3></div>
+
+        <div class="container">
+
+            <div class="container-md">
+                <p>
+                    <strong>Titular:</strong> @ViewBag.titulo <br />
+                    <strong>Fecha:</strong> @ViewBag.fecha
+                </p>
+                <br /> <button id="imprimir" class="btn btn-primary" style="text-align:right" onclick="imprimir()"> Imprimir</button>
+                <button id="enviar" class="btn btn-primary" style="text-align:right" onclick="">Enviar por correo</button>
+            </div>
+
+        </div>
+        <div class="container-md">
+
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Concepto</th>
+                        <th>Debito</th>
+                        <th> Crédito </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var datos in Model)
+                    {
+                        <tr>
+                            <td>@datos.EstadoCuent_FechaD.ToString("d")</td>
+                            <td>@datos.EstadoCuent_Concepto</td>
+                            <td>@datos.EstadoCuent_Debito</td>
+                            <td>@datos.EstadoCuent_Credito</td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+    function imprimir() {
+        const $imprimir = document.getElementById('imprimir')
+        const $enviar = document.getElementById('enviar')
+        $imprimir.style.display = 'none';
+        $enviar.style.display = 'none';
+        window.print()
+        $imprimir.style.display = 'block';
+        $enviar.style.display = 'block';
+    }
+    </script>
+</body>
+</html>

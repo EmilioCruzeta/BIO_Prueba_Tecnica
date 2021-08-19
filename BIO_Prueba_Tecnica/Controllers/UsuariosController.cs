@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
 using BIO_Prueba_Tecnica.Models;
@@ -33,7 +34,7 @@ namespace BIO_Prueba_Tecnica.Controllers
                
                 if (ValidarUsua.ValidarUsuario(DatosLogin) )
                 {
-                    return RedirectToAction("CrearUsuario");
+                    return RedirectToAction("EstadoCuenta");
                 }
                 else
                 {
@@ -120,5 +121,46 @@ namespace BIO_Prueba_Tecnica.Controllers
                 throw new Exception("Error Recuperando Cuenta", ex);
             }
         }
+
+        [HttpGet]
+        public IActionResult EstadoCuenta()
+        {
+            try
+            {
+
+                MantenimientoUsuario mCuentas = new MantenimientoUsuario();
+
+                return View(mCuentas.LlenarEstadoCuenta()) ;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Error Recuperando Cuenta", ex);
+            }
+            
+        }
+
+        [HttpGet]
+        public IActionResult EstadoCuentaDetalle(int id)
+        {
+            try
+            {
+
+                ViewBag.titulo = "peres";
+                ViewBag.fecha = DateTime.Now.ToString("d");
+
+                
+
+                MantenimientoUsuario mCuentas = new MantenimientoUsuario();
+
+                return View(mCuentas.LlenarEstadoCuentaDetalle(id));
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en estado de cuenta detalle", ex);
+            }
+
+        }
+
     }
 }

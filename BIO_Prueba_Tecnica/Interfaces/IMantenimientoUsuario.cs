@@ -10,5 +10,7 @@ namespace BIO_Prueba_Tecnica.Interfaces
     {
         bool ValidarUsuario(Login DatosLogin);
         bool CrearUsua(Usuarios DatosUsuario);
+        List<EstadoCuenta> LlenarEstadoCuenta();
+        List<EstadoCuenta> LlenarEstadoCuentaDetalle(int id);
     }
 }

@@ -26,12 +26,12 @@ namespace BIO_Prueba_Tecnica.Models
                     SqlCommand com = new SqlCommand(sql,cn);
 
                     cn.Open();
-                    Row = (bool)com.ExecuteScalar();
+                    com.ExecuteScalar(); 
                     cn.Close();
 
             }
 
-                return Row;
+                return true;
             }
             catch(Exception ex)
             {
@@ -74,6 +74,79 @@ namespace BIO_Prueba_Tecnica.Models
                 return false;
             }
         }
+        public List<EstadoCuenta> LlenarEstadoCuenta()
+        {
+            List<EstadoCuenta> ListaCuenta = new List<EstadoCuenta>();
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(strCn))
+                {
+                    string sql = "select top 10 EstadoCuent_Id, EstadoCuent_Nombre, EstadoCuent_Apellido,EstadoCuent_Titular,EstadoCuent_Fecha from EstadoCuentaM ";
+                    cn.Open();
+                    SqlCommand com = new SqlCommand(sql, cn);
+                    SqlDataReader Row = com.ExecuteReader();
+                   while (Row.Read())
+                    {
+                        EstadoCuenta Datos = new EstadoCuenta()
+                        {
+                            EstadoCuent_Id = Convert.ToInt32(Row["EstadoCuent_Id"]),
+                            EstadoCuent_Nombre = Row["EstadoCuent_Nombre"].ToString(),
+                            EstadoCuent_Apellido = Row["EstadoCuent_Apellido"].ToString(),
+                            EstadoCuent_Titular = Row["EstadoCuent_Titular"].ToString(),
+                            EstadoCuent_Fecha = Convert.ToDateTime( Row["EstadoCuent_Fecha"]),
+                        };
+                        ListaCuenta.Add(Datos);
+                    }
+                  
+                    
+                }
 
+                return ListaCuenta;
+            }
+            catch(Exception ex)
+            {
+                return ListaCuenta;
+            }
+        }
+
+
+        public List<EstadoCuenta> LlenarEstadoCuentaDetalle(int id)
+        {
+            List<EstadoCuenta> ListaCuenta = new List<EstadoCuenta>();
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(strCn))
+                {
+                    string sql = string.Concat("select EstadoCuent_Fecha, EstadoCuent_Concepto,EstadoCuent_Debito,",
+                                                      "EstadoCuent_Credito,",
+                                                      " EstadoCuent_Balance",
+                                                       " from EstadoCuentaD where EstadoCuent_Id = ", id);
+
+                    cn.Open();
+                    SqlCommand com = new SqlCommand(sql, cn);
+                    SqlDataReader Row = com.ExecuteReader();
+                    while (Row.Read())
+                    {
+                        EstadoCuenta Datos = new EstadoCuenta()
+                        {
+                            EstadoCuent_Balance = Convert.ToDouble(Row["EstadoCuent_Balance"]),
+                            EstadoCuent_Concepto = Row["EstadoCuent_Concepto"].ToString(),
+                            EstadoCuent_Credito = Convert.ToDouble( Row["EstadoCuent_Credito"]),
+                            EstadoCuent_Debito = Convert.ToDouble(Row["EstadoCuent_Debito"]),
+                            EstadoCuent_FechaD = Convert.ToDateTime(Row["EstadoCuent_Fecha"]),
+                        };
+                        ListaCuenta.Add(Datos);
+                    }
+
+
+                }
+
+                return ListaCuenta;
+            }
+            catch (Exception ex)
+            {
+                return ListaCuenta;
+            }
+        }
     }
 }
