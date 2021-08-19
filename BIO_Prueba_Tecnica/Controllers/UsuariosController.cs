@@ -140,13 +140,13 @@ namespace BIO_Prueba_Tecnica.Controllers
         }
 
         [HttpGet]
-        public IActionResult EstadoCuentaDetalle(int id)
+        public IActionResult EstadoCuentaDetalle(int id, string titular, DateTime fecha)
         {
             try
             {
 
-                ViewBag.titulo = "peres";
-                ViewBag.fecha = DateTime.Now.ToString("d");
+                ViewBag.titulo = titular;
+                ViewBag.fecha = fecha.ToString("d");
 
                 
 

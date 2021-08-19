@@ -31,7 +31,7 @@
                         <td>@datos.EstadoCuent_Nombre</td>
                         <td>@datos.EstadoCuent_Apellido</td>
                        
-                        <td>@Html.ActionLink("Detalle", "EstadoCuentaDetalle", new { id = datos.EstadoCuent_Id}); </td>
+                        <td>@Html.ActionLink("Detalle", "EstadoCuentaDetalle", new { id = datos.EstadoCuent_Id, fecha = datos.EstadoCuent_Fecha , titular = datos.EstadoCuent_Titular}); </td>
                     </tr>
                         }
                     
