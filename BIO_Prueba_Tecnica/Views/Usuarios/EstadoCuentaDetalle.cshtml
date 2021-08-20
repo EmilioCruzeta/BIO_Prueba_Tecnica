@@ -7,6 +7,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    <script src="~/js/html2pdf.bundle.min.js"></script>
+    <script src="~/js/build-scripts.js"></script>
+    <style type="text/css">
+        .boton_personalizado {
+            text-decoration: none;
+            padding: .375rem .75rem;
+            font-weight: 400;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #0d6efd;
+            border-radius: .25rem;
+            border: 1px solid #0d6efd;
+        }
+    </style>
+
 </head>
 <body>
 
@@ -20,8 +36,12 @@
                     <strong>Titular:</strong> @ViewBag.titulo <br />
                     <strong>Fecha:</strong> @ViewBag.fecha
                 </p>
-                <br /> <button id="imprimir" class="btn btn-primary" style="text-align:right" onclick="imprimir()"> Imprimir</button>
-                <button id="enviar" class="btn btn-primary" style="text-align:right" onclick="">Enviar por correo</button>
+                <br /> <button id="Imprimir" class="btn btn-primary" style="text-align:right" onclick="imprimir()"> Imprimir</button>
+                <button id="GurdarPDF" class="btn btn-primary" style="text-align:right" onclick="GurdarPDF()">GurdarPDF</button>
+                <a id="Enviar" class="boton_personalizado" href="mailto:diego1@gmail.com?subject=aquí el título&body=sdfd">Enviar mail.</a>
+
+               
+
             </div>
 
         </div>
@@ -35,18 +55,20 @@
                         <th>Concepto</th>
                         <th>Debito</th>
                         <th> Crédito </th>
+                        <th> Balance </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var datos in Model)
                     {
-                        <tr>
-                            <td>@datos.EstadoCuent_FechaD.ToString("d")</td>
-                            <td>@datos.EstadoCuent_Concepto</td>
-                            <td>@datos.EstadoCuent_Debito</td>
-                            <td>@datos.EstadoCuent_Credito</td>
+                    <tr>
+                        <td>@datos.EstadoCuent_FechaD.ToString("d")</td>
+                        <td>@datos.EstadoCuent_Concepto</td>
+                        <td>@datos.EstadoCuent_Debito</td>
+                        <td>@datos.EstadoCuent_Credito</td>
+                        <td>@datos.EstadoCuent_Balance</td>
 
-                        </tr>
+                    </tr>
                     }
 
 
@@ -55,15 +77,45 @@
         </div>
     </div>
     <script>
+       
     function imprimir() {
-        const $imprimir = document.getElementById('imprimir')
-        const $enviar = document.getElementById('enviar')
+        const $imprimir = document.getElementById('Imprimir')
+        const $enviar = document.getElementById('Enviar')
+        const $GurdarPDF = document.getElementById('GurdarPDF')
         $imprimir.style.display = 'none';
         $enviar.style.display = 'none';
+        $GurdarPDF .style.display = 'none';
         window.print()
         $imprimir.style.display = 'block';
         $enviar.style.display = 'block';
-    }
+        $GurdarPDF.style.display = 'block';
+        }
+
+        function GurdarPDF() {
+            const $elementoParaConvertir = document.body; 
+            html2pdf()
+                .set({
+                    margin: 1,
+                    filename: 'documento.pdf',
+                    image: {
+                        type: 'jpeg',
+                        quality: 0.98
+                    },
+                    html2canvas: {
+                        scale: 3, 
+                        letterRendering: true,
+                    },
+                    jsPDF: {
+                        unit: "in",
+                        format: "a3",
+                        orientation: 'portrait' 
+                    }
+                })
+                .from($elementoParaConvertir)
+                .save()
+                .catch(err => console.log(err));
+        }
+
     </script>
 </body>
 </html>
