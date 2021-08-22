@@ -9,6 +9,9 @@
             <form asp-action="RecuperarCuenta" method="post">
                 <p class="card-text">
                     <div class="me-3">
+                        <div style="text-align: center">
+                            <span class="text-danger"> @ViewBag.InvalidoMail</span>
+                        </div>
                         <input type="text" class="form-control" id="Edad" asp-for="Emial" placeholder="Correo">
                         <span asp-validation-for="Emial" class="text-danger"></span>
                     </div>

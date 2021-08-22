@@ -24,9 +24,6 @@ namespace BIO_Prueba_Tecnica.Controllers
             try
             {
 
-           
-
-           
             if (ModelState.IsValid)
             {
                 MantenimientoUsuario ValidarUsua = new MantenimientoUsuario();
@@ -34,6 +31,10 @@ namespace BIO_Prueba_Tecnica.Controllers
                
                 if (ValidarUsua.ValidarUsuario(DatosLogin) )
                 {
+                        TempData["clave"] = DatosLogin.usuario_Clave;
+                        TempData["usuario"] = DatosLogin.usuario_Nombre;
+
+
                     return RedirectToAction("EstadoCuenta");
                 }
                 else
@@ -106,9 +107,19 @@ namespace BIO_Prueba_Tecnica.Controllers
         {
             try
             {
+                ViewBag.InvalidoMail = "";
                 if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Login");
+                    MantenimientoUsuario RecuperarDatos = new MantenimientoUsuario();
+                    if (RecuperarDatos.RecuperarCredenciales(DatosCuentaEmail.Emial))
+                    {
+                        return RedirectToAction("Login");
+                    }else
+                    {
+                        ViewBag.InvalidoMail = "Mail Inválido";
+                        return View(DatosCuentaEmail);
+                    }
+                   
                 }
                 else
                 {
@@ -147,10 +158,11 @@ namespace BIO_Prueba_Tecnica.Controllers
 
                 ViewBag.titulo = titular;
                 ViewBag.fecha = fecha.ToString("d");
-
+                ViewBag.id = id;
                 
 
-                MantenimientoUsuario mCuentas = new MantenimientoUsuario();
+
+               MantenimientoUsuario mCuentas = new MantenimientoUsuario();
 
                 return View(mCuentas.LlenarEstadoCuentaDetalle(id));
 
@@ -161,6 +173,23 @@ namespace BIO_Prueba_Tecnica.Controllers
             }
 
         }
+       
+        public IActionResult EnviarEstadoCuenta(string IdCuenta)
+        {
+
+            
+            MantenimientoUsuario Envio = new MantenimientoUsuario();
+            string clave = (string)TempData["clave"];
+            string usuario =  (string)TempData["usuario"];
+            Envio.EnviarEstadoCuenta(IdCuenta,clave,usuario);
+            return RedirectToAction("EstadoCuenta");
+            
+            
+            
+
+
+        }
+
 
     }
 }

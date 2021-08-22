@@ -10,18 +10,7 @@
 
     <script src="~/js/html2pdf.bundle.min.js"></script>
     <script src="~/js/build-scripts.js"></script>
-    <style type="text/css">
-        .boton_personalizado {
-            text-decoration: none;
-            padding: .375rem .75rem;
-            font-weight: 400;
-            font-size: 1rem;
-            color: #fff;
-            background-color: #0d6efd;
-            border-radius: .25rem;
-            border: 1px solid #0d6efd;
-        }
-    </style>
+
 
 </head>
 <body>
@@ -36,11 +25,13 @@
                     <strong>Titular:</strong> @ViewBag.titulo <br />
                     <strong>Fecha:</strong> @ViewBag.fecha
                 </p>
-                <br /> <button id="Imprimir" class="btn btn-primary" style="text-align:right" onclick="imprimir()"> Imprimir</button>
-                <button id="GurdarPDF" class="btn btn-primary" style="text-align:right" onclick="GurdarPDF()">GurdarPDF</button>
-                <a id="Enviar" class="boton_personalizado" href="mailto:diego1@gmail.com?subject=aquí el título&body=sdfd">Enviar mail.</a>
+                <br />
+                <button id="Imprimir" class="btn btn-primary" style="text-align:right" onclick="imprimir()"> Imprimir</button>
+                <button id="GurdarPDF" class="btn btn-primary" style="text-align:right" onclick="Guardar PDF()">GurdarPDF</button>
+                <input id="EnviarMail" type="submit" class="btn btn-primary" value="Enviar mail" onclick="location.href='@Url.Action("EnviarEstadoCuenta", "Usuarios", new { IdCuenta = @ViewBag.id })'" />
 
-               
+            
+
 
             </div>
 
@@ -80,7 +71,7 @@
        
     function imprimir() {
         const $imprimir = document.getElementById('Imprimir')
-        const $enviar = document.getElementById('Enviar')
+        const $enviar = document.getElementById('EnviarMail')
         const $GurdarPDF = document.getElementById('GurdarPDF')
         $imprimir.style.display = 'none';
         $enviar.style.display = 'none';
@@ -89,6 +80,7 @@
         $imprimir.style.display = 'block';
         $enviar.style.display = 'block';
         $GurdarPDF.style.display = 'block';
+        location.reload();
         }
 
         function GurdarPDF() {

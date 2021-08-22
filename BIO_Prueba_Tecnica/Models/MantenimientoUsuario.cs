@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using BIO_Prueba_Tecnica.Models;
 using BIO_Prueba_Tecnica.Interfaces;
-
+using System.Net.Mail;
 
 namespace BIO_Prueba_Tecnica.Models
 {
@@ -17,8 +17,6 @@ namespace BIO_Prueba_Tecnica.Models
         {
             try
             {
-
-            bool Row = false;
             using (SqlConnection cn  = new SqlConnection(strCn))
             {
                     string sql = string.Concat("select count(*) from Usuarios where  usuario_Clave ='", DatosLogin.usuario_Clave,
@@ -33,7 +31,7 @@ namespace BIO_Prueba_Tecnica.Models
 
                 return true;
             }
-            catch(Exception ex)
+            catch
             {
                return false;
             }
@@ -69,7 +67,7 @@ namespace BIO_Prueba_Tecnica.Models
 
                 return true; 
             }
-            catch(Exception ex)
+            catch
             {
                 return false;
             }
@@ -103,7 +101,7 @@ namespace BIO_Prueba_Tecnica.Models
 
                 return ListaCuenta;
             }
-            catch(Exception ex)
+            catch
             {
                 return ListaCuenta;
             }
@@ -133,7 +131,7 @@ namespace BIO_Prueba_Tecnica.Models
                             EstadoCuent_Concepto = Row["EstadoCuent_Concepto"].ToString(),
                             EstadoCuent_Credito = Convert.ToDouble( Row["EstadoCuent_Credito"]),
                             EstadoCuent_Debito = Convert.ToDouble(Row["EstadoCuent_Debito"]),
-                            EstadoCuent_FechaD = Convert.ToDateTime(Row["EstadoCuent_Fecha"]),
+                            EstadoCuent_FechaD = Convert.ToDateTime(Row["EstadoCuent_Fecha"])
                         };
                         ListaCuenta.Add(Datos);
                     }
@@ -143,10 +141,182 @@ namespace BIO_Prueba_Tecnica.Models
 
                 return ListaCuenta;
             }
-            catch (Exception ex)
+            catch 
             {
                 return ListaCuenta;
             }
+        }
+
+
+       public bool RecuperarCredenciales(string email)
+        {
+            try
+            {
+                if(ValidarMail(email))
+                {
+                    using (SqlConnection cn = new SqlConnection(strCn))
+                    {
+                        string sql = string.Concat("select usuario_Clave, usuario_Nombre from Usuarios where usuario_Email = '",email,"'");
+
+                        SqlCommand com = new SqlCommand(sql,cn);
+                        cn.Open();
+
+                        SqlDataReader rows = com.ExecuteReader();
+
+                        if (rows.Read())
+                        {
+                            Usuarios Datos = new Usuarios()
+                            {
+                                usuario_Clave = rows["usuario_Clave"].ToString(),
+                                usuario_Nombre = rows["usuario_Nombre"].ToString()
+                            };
+
+                            string bodydatos = string.Concat("<table border striped><thead><tr><td>Nombre</td><td>Clave</td></thead>",
+                             "<tbody><tr><td>", Datos.usuario_Nombre,"</td><td>",Datos.usuario_Clave,"</td></tbody></table>");
+                            MailMessage mail = new MailMessage();
+                            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+                            mail.From = new MailAddress("prueba.envio.tenico@gmail.com");
+                            mail.To.Add(email);
+                            mail.Subject = "Recuperar Clave";
+                            mail.Body = bodydatos;
+                            mail.IsBodyHtml = true;
+
+                            SmtpServer.Port = 587;
+                            SmtpServer.Credentials = new System.Net.NetworkCredential("prueba.envio.tenico@gmail.com", "1111111111+");
+                            SmtpServer.EnableSsl = true;
+                            SmtpServer.Send(mail);
+                        }
+
+
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+
+            catch
+            {
+
+                return false;
+            }
+        }
+
+
+        public bool ValidarMail(string mail)
+        {
+            try
+            {
+
+                int ValorMail;
+                using (SqlConnection cn = new SqlConnection(strCn))
+                {
+                    string sql = string.Concat(" select count(usuario_Email)  from  Usuarios where usuario_Email ='", mail, "'");
+                    SqlCommand com = new SqlCommand(sql,cn);
+                    cn.Open();
+
+                    ValorMail = (int)com.ExecuteScalar();
+                    cn.Close();
+                }
+
+                return (ValorMail > 0) ;
+            }
+
+            catch
+            {
+
+                return false;
+            }
+        }
+
+
+        public void EnviarEstadoCuenta( string idCuenta,string clave, string usuario)
+        {
+            
+            try
+            {
+                string email = recuperarMal(clave,usuario);
+                string AttRuta = @"C:\BIODocumento\documento.pdf";
+                using (SqlConnection cn = new SqlConnection(strCn))
+                {
+
+                  
+                    string bodydatos = string.Concat("<table border striped><thead><tr><td>Fecha</td><td>Concepto</td><td>Debito</td>",
+                                                     "<td>Crédito</td><td>Balance</td></tr></thead><tbody>");
+
+                    string sql = string.Concat("select EstadoCuent_Fecha, EstadoCuent_Concepto,EstadoCuent_Debito,",
+                                                      "EstadoCuent_Credito,",
+                                                      " EstadoCuent_Balance",
+                                                       " from EstadoCuentaD where EstadoCuent_Id = ", idCuenta);
+
+                    cn.Open();
+                    SqlCommand com = new SqlCommand(sql, cn);
+                    SqlDataReader Row = com.ExecuteReader();
+                    while (Row.Read())
+                    {
+                        EstadoCuenta Datos = new EstadoCuenta()
+                        {
+                            EstadoCuent_Balance = Convert.ToDouble(Row["EstadoCuent_Balance"]),
+                            EstadoCuent_Concepto = Row["EstadoCuent_Concepto"].ToString(),
+                            EstadoCuent_Credito = Convert.ToDouble(Row["EstadoCuent_Credito"]),
+                            EstadoCuent_Debito = Convert.ToDouble(Row["EstadoCuent_Debito"]),
+                            EstadoCuent_FechaD = Convert.ToDateTime(Row["EstadoCuent_Fecha"])
+                        };
+
+                        bodydatos += string.Concat( $"<tr><td>{Datos.EstadoCuent_FechaD.ToString("d")}</td><td>{Datos.EstadoCuent_Concepto}</td><td>{Datos.EstadoCuent_Debito}</td>" +
+                                                    $" <td>{Datos.EstadoCuent_Credito}</td>  <td>{Datos.EstadoCuent_Balance}</td></tr>");
+
+                    }
+                    bodydatos += "</tbody></table>";
+
+
+
+
+                    MailMessage mail = new MailMessage();
+                    SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+                    mail.From = new MailAddress("prueba.envio.tenico@gmail.com");
+                    mail.To.Add(email);
+                    mail.Subject = "Estado de Cuenta";
+                    mail.Body = bodydatos;
+                    mail.IsBodyHtml = true;
+                    System.Net.Mail.Attachment archivo = new Attachment(AttRuta);
+                    mail.Attachments.Add(archivo);
+                    SmtpServer.Port = 587;
+                    SmtpServer.Credentials = new System.Net.NetworkCredential("prueba.envio.tenico@gmail.com", "1111111111+");
+                    SmtpServer.EnableSsl = true;
+                    SmtpServer.Send(mail);
+
+
+                }
+
+              
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error enviando estado de cuenta", ex);
+            }
+        }
+
+         public   string recuperarMal(string clave, string usuario)
+        {
+            try
+            {
+                string mail = "";
+                using (SqlConnection cn = new SqlConnection(strCn))
+                {
+                    string sql = $"select usuario_Email  from  Usuarios where usuario_Clave = '{clave}'and usuario_Nombre ='{usuario}' ";
+                    SqlCommand com = new SqlCommand(sql, cn);
+                    cn.Open();
+                    mail =  com.ExecuteScalar().ToString();
+                    cn.Close();
+                }
+                return mail;
+            }
+            catch
+            {
+                return "";
+            }
+           
         }
     }
 }
