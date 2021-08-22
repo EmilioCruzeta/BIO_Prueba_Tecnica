@@ -27,7 +27,7 @@
                 </p>
                 <br />
                 <button id="Imprimir" class="btn btn-primary" style="text-align:right" onclick="imprimir()"> Imprimir</button>
-                <button id="GurdarPDF" class="btn btn-primary" style="text-align:right" onclick="Guardar PDF()">GurdarPDF</button>
+                <button id="GuardarPDF" class="btn btn-primary" style="text-align:right" onclick="GuardarPDF()">Guardar PDF</button>
                 <input id="EnviarMail" type="submit" class="btn btn-primary" value="Enviar mail" onclick="location.href='@Url.Action("EnviarEstadoCuenta", "Usuarios", new { IdCuenta = @ViewBag.id })'" />
 
             
@@ -72,7 +72,7 @@
     function imprimir() {
         const $imprimir = document.getElementById('Imprimir')
         const $enviar = document.getElementById('EnviarMail')
-        const $GurdarPDF = document.getElementById('GurdarPDF')
+        const $GurdarPDF = document.getElementById('GuardarPDF')
         $imprimir.style.display = 'none';
         $enviar.style.display = 'none';
         $GurdarPDF .style.display = 'none';
@@ -83,7 +83,7 @@
         location.reload();
         }
 
-        function GurdarPDF() {
+        function GuardarPDF() {
             const $elementoParaConvertir = document.body; 
             html2pdf()
                 .set({

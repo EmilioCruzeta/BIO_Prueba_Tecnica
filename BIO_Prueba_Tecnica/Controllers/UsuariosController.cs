@@ -176,17 +176,19 @@ namespace BIO_Prueba_Tecnica.Controllers
        
         public IActionResult EnviarEstadoCuenta(string IdCuenta)
         {
-
-            
-            MantenimientoUsuario Envio = new MantenimientoUsuario();
+            try
+             {
+               MantenimientoUsuario Envio = new MantenimientoUsuario();
             string clave = (string)TempData["clave"];
             string usuario =  (string)TempData["usuario"];
             Envio.EnviarEstadoCuenta(IdCuenta,clave,usuario);
             return RedirectToAction("EstadoCuenta");
-            
-            
-            
-
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Error enviando estado de cuenta", ex);
+            }
+           
 
         }
 
