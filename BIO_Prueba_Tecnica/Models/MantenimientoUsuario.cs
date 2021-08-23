@@ -13,10 +13,11 @@ namespace BIO_Prueba_Tecnica.Models
     {
         private string strCn = "Data Source=DESKTOP-01IH626\\MSSQLSERVER14;Initial Catalog=BIO;Integrated Security=True";
 
-        public bool ValidarUsuario (Login DatosLogin)
+        public int ValidarUsuario (Login DatosLogin)
         {
             try
             {
+                int i = 0;
             using (SqlConnection cn  = new SqlConnection(strCn))
             {
                     string sql = string.Concat("select count(*) from Usuarios where  usuario_Clave ='", DatosLogin.usuario_Clave,
@@ -24,16 +25,16 @@ namespace BIO_Prueba_Tecnica.Models
                     SqlCommand com = new SqlCommand(sql,cn);
 
                     cn.Open();
-                    com.ExecuteScalar(); 
+                  i =  (int)com.ExecuteScalar(); 
                     cn.Close();
 
             }
 
-                return true;
+                return i;
             }
             catch
             {
-               return false;
+               return 0;
             }
         }
 

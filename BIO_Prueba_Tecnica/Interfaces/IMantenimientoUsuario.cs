@@ -8,7 +8,7 @@ namespace BIO_Prueba_Tecnica.Interfaces
 {
     interface IMantenimientoUsuario
     {
-        bool ValidarUsuario(Login DatosLogin);
+        int ValidarUsuario(Login DatosLogin);
         bool CrearUsua(Usuarios DatosUsuario);
         List<EstadoCuenta> LlenarEstadoCuenta();
         List<EstadoCuenta> LlenarEstadoCuentaDetalle(int id);

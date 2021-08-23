@@ -29,7 +29,7 @@ namespace BIO_Prueba_Tecnica.Controllers
                 MantenimientoUsuario ValidarUsua = new MantenimientoUsuario();
 
                
-                if (ValidarUsua.ValidarUsuario(DatosLogin) )
+                if (ValidarUsua.ValidarUsuario(DatosLogin)==1 )
                 {
                         TempData["clave"] = DatosLogin.usuario_Clave;
                         TempData["usuario"] = DatosLogin.usuario_Nombre;
